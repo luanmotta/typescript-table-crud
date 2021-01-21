@@ -8,6 +8,7 @@
       "es2017",
       "esnext.asynciterable"
     ],
+    "noEmitOnError": true,
     "sourceMap": false,
     "outDir": "app/js",
     "moduleResolution": "node",
