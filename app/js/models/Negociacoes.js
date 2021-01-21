@@ -1,3 +1,4 @@
+"use strict";
 class Negociacoes {
     constructor() {
         this._negociacoes = [];
@@ -6,6 +7,6 @@ class Negociacoes {
         this._negociacoes.push(negociacao);
     }
     paraArray() {
-        return this._negociacoes;
+        return [...this._negociacoes];
     }
 }

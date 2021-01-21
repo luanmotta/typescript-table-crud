@@ -1,12 +1,27 @@
+"use strict";
 class NegociacaoController {
     constructor() {
-        this._inputData = document.querySelector('#data');
-        this._inputQuantidade = document.querySelector('#quantidade');
-        this._inputValor = document.querySelector('#valor');
+        this._negociacoes = new Negociacoes();
+        this._negociacoesView = new NegociacoesView('#negociacoesView');
+        this._mensagemView = new MensagemView('#mensagemView');
+        this._inputData = $('#data');
+        this._inputQuantidade = $('#quantidade');
+        this._inputValor = $('#valor');
+        this._negociacoesView.update(this._negociacoes);
     }
     adiciona(event) {
         event.preventDefault();
-        const negociacao = new Negociacao(new Date(this._inputData.value.replace(/-/g, ',')), parseInt(this._inputQuantidade.value), parseFloat(this._inputValor.value));
-        console.log(negociacao.quantidade + 20);
+        const _inputData = this._inputData.val();
+        const _inputQuantidade = this._inputQuantidade.val();
+        const _inputValor = this._inputValor.val();
+        const negociacao = new Negociacao(new Date(_inputData.replace(/-/g, ',')), parseInt(_inputQuantidade), parseFloat(_inputValor));
+        this._negociacoes.adiciona(negociacao);
+        this._negociacoes.paraArray().forEach((negociacao) => {
+            console.log(negociacao.data);
+            console.log(negociacao.quantidade);
+            console.log(negociacao.valor);
+        });
+        this._negociacoesView.update(this._negociacoes);
+        this._mensagemView.update('Negociação adicionada com sucesso');
     }
 }

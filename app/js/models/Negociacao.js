@@ -1,3 +1,4 @@
+"use strict";
 class Negociacao {
     constructor(_data, _quantidade, _valor) {
         this._data = _data;
