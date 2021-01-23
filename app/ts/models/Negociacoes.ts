@@ -12,4 +12,9 @@ export class Negociacoes {
   paraArray(): Negociacao[] {
     return [...this._negociacoes];
   }
+
+  paraTexto(): void {
+    console.log(JSON.stringify(this._negociacoes));
+  }
+
 }
