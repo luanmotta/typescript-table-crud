@@ -1,16 +1,22 @@
-class NegociacaoController {
+import { NegociacoesView, MensagemView } from '../views/index';
+import { Negociacao, Negociacoes } from '../models/index';
+import { domInject } from '../helpers/decorators/index'
+export class NegociacaoController {
+
+  @domInject('#data')
   private _inputData: JQuery;
+
+  @domInject('#quantidade')
   private _inputQuantidade: JQuery;
+
+  @domInject('#valor')
   private _inputValor: JQuery;
+
   private _negociacoes = new Negociacoes();
   private _negociacoesView = new NegociacoesView('#negociacoesView');
   private _mensagemView = new MensagemView('#mensagemView');
 
   constructor() {
-    this._inputData = $('#data');
-    this._inputQuantidade = $('#quantidade');
-    this._inputValor = $('#valor');
-
     this._negociacoesView.update(this._negociacoes)
   }
 
@@ -20,8 +26,15 @@ class NegociacaoController {
     const _inputQuantidade = <string>this._inputQuantidade.val();
     const _inputValor = <string>this._inputValor.val();
 
+    const data = new Date(_inputData.replace(/-/g, ','))
+
+    if (!this._ehDiaUtil(data)) {
+      this._mensagemView.update('Somente negociações em dias úteis, por favor.')
+      return
+    }
+
     const negociacao = new Negociacao(
-      new Date(_inputData.replace(/-/g, ',')),
+      data,
       parseInt(_inputQuantidade),
       parseFloat(_inputValor)
     );
@@ -35,4 +48,18 @@ class NegociacaoController {
     this._mensagemView.update('Negociação adicionada com sucesso');
   }
 
+  private _ehDiaUtil(data: Date) {
+    return data.getDay() !== DiaDaSemana.Sabado && data.getDay() !== DiaDaSemana.Domingo
+  }
+
+}
+
+enum DiaDaSemana {
+  Domingo,
+  Segunda,
+  Terca,
+  Quarta,
+  Quinta,
+  Sexta,
+  Sabado,
 }
