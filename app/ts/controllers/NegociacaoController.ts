@@ -4,13 +4,13 @@ import { domInject } from '../helpers/decorators/index'
 export class NegociacaoController {
 
   @domInject('#data')
-  private _inputData: JQuery;
+  private _inputData!: JQuery;
 
   @domInject('#quantidade')
-  private _inputQuantidade: JQuery;
+  private _inputQuantidade!: JQuery;
 
   @domInject('#valor')
-  private _inputValor: JQuery;
+  private _inputValor!: JQuery;
 
   private _negociacoes = new Negociacoes();
   private _negociacoesView = new NegociacoesView('#negociacoesView');
