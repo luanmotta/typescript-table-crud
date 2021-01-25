@@ -1,5 +1,5 @@
-import { Negociacao } from '../models/index';
+import { Imprimivel } from '../models/index';
 
-export function imprime(...negociacoes: Negociacao[]): void {
-  negociacoes.forEach(negociacao => negociacao.paraTexto())
+export function imprime(...objetos: Imprimivel[]): void {
+  objetos.forEach(objeto => objeto.paraTexto())
 }

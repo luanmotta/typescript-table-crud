@@ -9,6 +9,15 @@ System.register(["../views/index", "../models/index", "../helpers/decorators/ind
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
+    var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    };
     var index_1, index_2, index_3, index_4, index_5, NegociacaoController, DiaDaSemana;
     var __moduleName = context_1 && context_1.id;
     return {
@@ -51,23 +60,28 @@ System.register(["../views/index", "../models/index", "../helpers/decorators/ind
                     this._negociacoes.adiciona(negociacao);
                     this._negociacoesView.update(this._negociacoes);
                     this._mensagemView.update('Negociação adicionada com sucesso');
-                    index_5.imprime(negociacao);
+                    index_5.imprime(negociacao, this._negociacoes);
                 }
                 _ehDiaUtil(data) {
                     return data.getDay() !== DiaDaSemana.Sabado && data.getDay() !== DiaDaSemana.Domingo;
                 }
                 importaDados() {
-                    this._service
-                        .obterNegociacoes(res => {
-                        if (res.ok) {
-                            return res;
-                        }
-                        else {
-                            throw new Error(res.statusText);
-                        }
-                    })
-                        .then(negociacoes => {
-                        negociacoes.forEach(negociacao => {
+                    return __awaiter(this, void 0, void 0, function* () {
+                        const negociacoesParaImportar = yield this._service
+                            .obterNegociacoes(res => {
+                            if (res.ok) {
+                                return res;
+                            }
+                            else {
+                                throw new Error(res.statusText);
+                            }
+                        });
+                        const negociacoesJaImportadas = this._negociacoes.paraArray();
+                        negociacoesParaImportar.filter(negociacao => {
+                            return !negociacoesJaImportadas.some(jaImportada => {
+                                return negociacao.ehIgual(jaImportada);
+                            });
+                        }).forEach(negociacao => {
                             this._negociacoes.adiciona(negociacao);
                             this._negociacoesView.update(this._negociacoes);
                         });
@@ -96,7 +110,7 @@ System.register(["../views/index", "../models/index", "../helpers/decorators/ind
                 index_3.throttle(),
                 __metadata("design:type", Function),
                 __metadata("design:paramtypes", []),
-                __metadata("design:returntype", void 0)
+                __metadata("design:returntype", Promise)
             ], NegociacaoController.prototype, "importaDados", null);
             exports_1("NegociacaoController", NegociacaoController);
             (function (DiaDaSemana) {

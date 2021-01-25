@@ -47,7 +47,7 @@ export class NegociacaoController {
     this._negociacoesView.update(this._negociacoes);
     this._mensagemView.update('Negociação adicionada com sucesso');
 
-    imprime(negociacao)
+    imprime(negociacao, this._negociacoes)
 
   }
 
@@ -56,8 +56,8 @@ export class NegociacaoController {
   }
 
   @throttle()
-  importaDados() {
-    this._service
+  async importaDados() {
+    const negociacoesParaImportar = await this._service
       .obterNegociacoes(res => {
         if (res.ok) {
           return res;
@@ -65,12 +65,16 @@ export class NegociacaoController {
           throw new Error(res.statusText);
         }
       })
-      .then(negociacoes => {
-        negociacoes.forEach(negociacao => {
-          this._negociacoes.adiciona(negociacao);
-          this._negociacoesView.update(this._negociacoes);
+      const negociacoesJaImportadas = this._negociacoes.paraArray();
+
+      negociacoesParaImportar.filter(negociacao => {
+        return !negociacoesJaImportadas.some(jaImportada => {
+          return negociacao.ehIgual(jaImportada);
         })
-      });
+      }).forEach(negociacao => {
+        this._negociacoes.adiciona(negociacao);
+        this._negociacoesView.update(this._negociacoes);
+      })
   }
 }
 
